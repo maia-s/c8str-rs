@@ -27,3 +27,8 @@ assert_eq!(c8!("hello").as_c_str(), CStr::from_bytes_with_nul(b"hello\0").unwrap
 
 - `alloc` - Enable the `C8String` type. This requires the standard `alloc` or `std` crates.
 - `std` - Implement the `Error` trait from `std` for this crate's error types. Implies `alloc`.
+
+## Version history
+
+- 0.1.1 - show documentation for all features on docs.rs
+- 0.1.0 - first release
