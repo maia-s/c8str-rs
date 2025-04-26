@@ -37,17 +37,17 @@ extern crate std;
 #[cfg(feature = "std")]
 use std::error::Error;
 
-mod c8_str;
+mod c8str;
 
 #[doc(inline)]
-pub use c8_str::C8Str;
+pub use c8str::C8Str;
 
 #[cfg(feature = "alloc")]
-mod c8_string;
+mod c8string;
 
 #[cfg(feature = "alloc")]
 #[doc(inline)]
-pub use c8_string::{C8String, StringType};
+pub use c8string::{C8String, StringType};
 
 #[cfg(test)]
 mod tests;

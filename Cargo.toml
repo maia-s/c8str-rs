@@ -1,6 +1,6 @@
 [package]
 name = "c8str"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Maia S. R."]
 license = "Zlib OR MIT OR Apache-2.0"
@@ -9,6 +9,7 @@ repository = "https://github.com/maia-s/c8str-rs"
 documentation = "https://docs.rs/c8str"
 keywords = ["string", "utf-8", "null-terminated", "ffi"]
 categories = ["development-tools", "rust-patterns", "no-std", "no-std::no-alloc"]
+rust-version = "1.72"
 
 [features]
 default = []

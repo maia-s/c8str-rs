@@ -101,14 +101,16 @@ impl C8Str {
     /// reference to the memory pointed to by `ptr` for that length. The length must not be larger
     /// than `isize::MAX`.
     #[inline]
-    pub unsafe fn from_ptr<'a>(ptr: *const c_char) -> Result<&'a C8Str, C8StrError> {
+    pub const unsafe fn from_ptr<'a>(ptr: *const c_char) -> Result<&'a C8Str, C8StrError> {
         let mut len = 0;
         while ptr.add(len).read() != 0 {
             len += 1;
         }
         Ok(Self::from_str_with_nul_unchecked(
-            str::from_utf8(slice::from_raw_parts(ptr as *const u8, len + 1))
-                .map_err(|e| C8StrError::not_utf8(e.valid_up_to()))?,
+            match str::from_utf8(slice::from_raw_parts(ptr as *const u8, len + 1)) {
+                Ok(result) => result,
+                Err(e) => return Err(C8StrError::not_utf8(e.valid_up_to())),
+            },
         ))
     }
 
@@ -118,7 +120,7 @@ impl C8Str {
     /// lifetime is valid for a shared reference to the memory pointed to by `ptr` for that length.
     /// The length must not be larger than `isize::MAX`.
     #[inline]
-    pub unsafe fn from_ptr_unchecked<'a>(ptr: *const c_char) -> &'a C8Str {
+    pub const unsafe fn from_ptr_unchecked<'a>(ptr: *const c_char) -> &'a C8Str {
         let mut len = 0;
         while ptr.add(len).read() != 0 {
             len += 1;

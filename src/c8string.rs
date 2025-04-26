@@ -4,21 +4,20 @@ use core::{
     borrow::Borrow,
     ffi::CStr,
     fmt::{self, Display},
-    mem::transmute,
     ops::Deref,
 };
 
-mod sealed_stringish {
+mod sealed_string_type {
     pub trait Sealed {}
 }
 
 /// Trait for standard utf-8 string types. Implemented for `&str`, `String`, `Box<str>` and `Cow<'_, str>`
-pub trait StringType: sealed_stringish::Sealed + Into<String> {}
+pub trait StringType: sealed_string_type::Sealed + Into<String> {}
 
-impl sealed_stringish::Sealed for String {}
-impl sealed_stringish::Sealed for &str {}
-impl sealed_stringish::Sealed for Box<str> {}
-impl sealed_stringish::Sealed for Cow<'_, str> {}
+impl sealed_string_type::Sealed for String {}
+impl sealed_string_type::Sealed for &str {}
+impl sealed_string_type::Sealed for Box<str> {}
+impl sealed_string_type::Sealed for Cow<'_, str> {}
 impl StringType for String {}
 impl StringType for &str {}
 impl StringType for Box<str> {}
@@ -130,7 +129,7 @@ impl C8String {
     pub fn into_boxed_c8_str(self) -> Box<C8Str> {
         unsafe {
             // Safety: `C8Str` is a transparent wrapper around `str`
-            transmute::<Box<str>, Box<C8Str>>(self.0.into_boxed_str())
+            Box::from_raw(Box::into_raw(self.0.into_boxed_str()) as *mut C8Str)
         }
     }
 
@@ -302,7 +301,7 @@ impl From<Box<C8Str>> for C8String {
     fn from(value: Box<C8Str>) -> Self {
         Self(String::from(unsafe {
             // Safety: `C8Str` is a transparent wrapper around `str`
-            transmute::<Box<C8Str>, Box<str>>(value)
+            Box::from_raw(Box::into_raw(value) as *mut str)
         }))
     }
 }
