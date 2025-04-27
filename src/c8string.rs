@@ -236,6 +236,12 @@ impl C8String {
         self.0.push('\0');
         popped
     }
+
+    /// Clear the string, leaving only the null terminator
+    pub fn clear(&mut self) {
+        self.0.clear();
+        self.0.push('\0');
+    }
 }
 
 impl AsRef<C8Str> for C8String {

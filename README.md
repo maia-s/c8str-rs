@@ -30,5 +30,7 @@ assert_eq!(c8!("hello").as_c_str(), CStr::from_bytes_with_nul(b"hello\0").unwrap
 
 ## Version history
 
+- 0.1.3 - add C8String::clear
+- 0.1.2 - make `C8Str::from_ptr[_unchecked]` const
 - 0.1.1 - show documentation for all features on docs.rs
 - 0.1.0 - first release
