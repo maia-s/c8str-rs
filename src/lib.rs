@@ -29,10 +29,28 @@ macro_rules! c8 {
 }
 
 #[cfg(feature = "alloc")]
+/// Format and create a new [`C8String`]. This will panic if the formatted string
+/// contains any null bytes.
+///
+/// Usage is the same as for [`alloc::format!`].
+#[macro_export]
+macro_rules! c8format {
+    ($($fmt_args:tt)*) => {
+        C8String::new($crate::__reexports::format!($($fmt_args)*)).unwrap()
+    };
+}
+
+#[cfg(feature = "alloc")]
 extern crate alloc;
 
 #[cfg(feature = "std")]
 extern crate std;
+
+#[doc(hidden)]
+pub mod __reexports {
+    #[cfg(feature = "alloc")]
+    pub use alloc::format;
+}
 
 #[cfg(feature = "std")]
 use std::error::Error;
