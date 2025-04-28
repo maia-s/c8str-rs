@@ -4,7 +4,7 @@ use crate::{
 use core::{
     ffi::{c_char, CStr},
     fmt::{self, Display},
-    ops::Deref,
+    ops::{Deref, Index, RangeFrom, RangeFull},
     slice, str,
 };
 
@@ -340,5 +340,28 @@ impl alloc::borrow::ToOwned for C8Str {
     #[inline]
     fn to_owned(&self) -> Self::Owned {
         crate::C8String::from(self)
+    }
+}
+
+impl Index<RangeFrom<usize>> for C8Str {
+    type Output = C8Str;
+
+    #[inline(always)]
+    fn index(&self, index: RangeFrom<usize>) -> &Self::Output {
+        assert!(index.start < self.0.len());
+        unsafe {
+            // safety: the range includes the null terminator, and the contained string
+            // is known to be valid, so if the slice succeeds, the substring is valid
+            C8Str::from_str_with_nul_unchecked(&self.0[index])
+        }
+    }
+}
+
+impl Index<RangeFull> for C8Str {
+    type Output = C8Str;
+
+    #[inline(always)]
+    fn index(&self, _: RangeFull) -> &Self::Output {
+        self
     }
 }
